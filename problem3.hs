@@ -3,22 +3,18 @@
  -}
 import Data.List
 
+primes = 2 : [x | x <- [3..], isprime x]
+isprime x = all (\p -> x `mod` p > 0) (factorsToTry x)
+            where
+            factorsToTry x = takeWhile (\p -> p*p <= x) primes
 
--- I don't know how to import a module in haskell yet.
--- When I do I'll use this from util/Primes.hs instead of copy and paste like now
-inefficientPrimes :: Int -> [Int]
-inefficientPrimes n = sieve [2..n]
-                      where
-                      sieve (x:xs) = x : sieve (xs \\ [x,x+x..n])
-                      sieve [] = []
+target = 600851475143
 
-primes :: [Int]                      
-primes = inefficientPrimes 10000 -- Just randomly picked number of primes
+
+
+relevantPrimes = takeWhile (\x -> x <= floor (sqrt (fromIntegral target))) primes
 
 firstDivisiblePrime :: Int -> Maybe Int
-firstDivisiblePrime x = find (\p -> x `div` p == 0) primes
+firstDivisiblePrime x = find (\p -> x `mod` p == 0) (reverse relevantPrimes)
 
-primeFactors :: Int -> [Int]
-primeFactors n = run n []
-                 where 
-                    run p (x:xs)
+result = firstDivisiblePrime target
