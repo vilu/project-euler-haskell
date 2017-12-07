@@ -1,8 +1,12 @@
-module Primes where
+module Util.Primes 
+(
+    primes
+)
+where
+
 import Data.List
 
-inefficientPrimes :: Int -> [Int]
-inefficientPrimes n = sieve [2..n]
-                      where
-                      sieve (x:xs) = x : sieve (xs \\ [x,x+x..n])
-                      sieve [] = []
+primes = 2 : [x | x <- [3..], isprime x]
+isprime x = all (\p -> x `mod` p > 0) (factorsToTry x)
+            where
+            factorsToTry x = takeWhile (\p -> p*p <= x) primes
